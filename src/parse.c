@@ -55,11 +55,10 @@ int parse(int fd, char buff[], int n) {
         return 0;
     }
 
-    c_prt(buff, n);
-
     for (int i = 0; i < n; ++i)
         i += param_add(&params, buff + i);
 
+    /* processing command */
     list_t *pos;
     list_for_each(pos, &params) {
         c_prt(param_value(pos), strlen(param_value(pos)));
