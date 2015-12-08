@@ -31,4 +31,12 @@ extern void     table_map   (T table, void apply(void *key, void **value));
 
 #undef T
 
+static int cmpatom(const void *x, const void *y) {
+    return x != y;
+}
+
+static unsigned int hashatom(const void *key) {
+    return (unsigned long)key >> 2;
+}
+
 #endif

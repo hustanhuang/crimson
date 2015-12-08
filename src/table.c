@@ -7,14 +7,6 @@
 
 #define T table_t
 
-static int cmpatom(const void *x, const void *y) {
-    return x != y;
-}
-
-static unsigned int hashatom(const void *key) {
-    return (unsigned long)key >> 2;
-}
-
 T table_new (int hint, int cmp(const void *x, const void *y), unsigned int hash(const void *key)) {
     T table;
     static const int primes[] =
@@ -109,7 +101,7 @@ void table_map (T table, void apply(void *key, void **value)) {
     for (int i = 0; i != table->size; ++i)
         for (struct bucket *p = table->buckets[i]; p; p = p->link) {
             apply(p->key, &p->value);
-            assert(table->timestamp = stamp);
+            assert(table->timestamp == stamp);
         }
 }
 
