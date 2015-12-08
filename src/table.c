@@ -15,13 +15,10 @@ static unsigned int hashatom(const void *key) {
     return (unsigned long)key >> 2;
 }
 
-T table_new   (int hint,
-        int cmp(const void *x, const void *y),
-        unsigned int hash(const void *key)) {
+T table_new (int hint, int cmp(const void *x, const void *y), unsigned int hash(const void *key)) {
     T table;
-    static const int primes[] = {
-        509, 509, 1021, 3053, 4093, 8191, 16381, 32771, 65521, INT_MAX
-    };
+    static const int primes[] =
+    { 509, 509, 1021, 3053, 4093, 8191, 16381, 32771, 65521, INT_MAX };
     assert(hint >= 0);
     int i = 1;
     while (primes[i] < hint)
@@ -105,8 +102,7 @@ struct bucket *table_remove (T table, void *key) {
     return NULL;
 }
 
-void table_map (T table,
-        void apply(void *key, void **value)) {
+void table_map (T table, void apply(void *key, void **value)) {
     assert(table);
     assert(apply);
     unsigned int stamp = table->timestamp;
