@@ -27,9 +27,8 @@ int main(int argc, char *argv[]) {
 
     update_event(kqfd, listenfd, KREADEVENT, 0);
 
-    do {
+    while (!request_quit)
         loop_once(kqfd, listenfd, 500);
-    } while (!request_quit);
 
     c_log("quit");
     exit(EXIT_SUCCESS);
