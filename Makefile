@@ -3,7 +3,7 @@ CFAGS= -Wall -Wextra -std=c99
 
 all: server
 
-server: srv kq sock parse list sds
+server: srv kq sock parse list sds hash table
 	$(CC) $(CFLAGS) -o srv obj/srv.o obj/kq.o obj/sock.o obj/parse.o obj/list.o obj/sds.o
 
 srv:
@@ -23,6 +23,12 @@ list:
 
 sds:
 	$(CC) $(CFLAGS) -o obj/sds.o -c src/sds.c
+
+hash:
+	$(CC) $(CFLAGS) -o obj/hash.o -c src/hash.c
+
+table:
+	$(CC) $(CFLAGS) -o obj/table.o -c src/table.c
 
 clean:
 	rm srv *~ obj/* src/*~
