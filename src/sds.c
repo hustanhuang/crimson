@@ -1,4 +1,4 @@
-#include "../include/sds.h"
+#include "include/sds.h"
 
 #include <stdio.h>
 #include <stdlib.h>

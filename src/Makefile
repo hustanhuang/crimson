@@ -1,4 +1,4 @@
-IDIR= ../include
+IDIR= include
 CC= gcc-5
 CFAGS= -Wall -Wextra -std=c99 -I$(IDIR)
 

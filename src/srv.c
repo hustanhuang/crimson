@@ -1,11 +1,11 @@
-#include "../include/srv.h"
+#include "include/srv.h"
 
 #include <stdlib.h>
 #include <signal.h>
 
-#include "../include/utils.h"
-#include "../include/kq.h"
-#include "../include/sock.h"
+#include "include/utils.h"
+#include "include/kq.h"
+#include "include/sock.h"
 
 void sig_handler(int sig) {
     switch (sig) {

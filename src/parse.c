@@ -1,12 +1,12 @@
-#include "../include/parse.h"
+#include "include/parse.h"
 
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
-#include "../include/utils.h"
-#include "../include/list.h"
-#include "../include/sds.h"
+#include "include/utils.h"
+#include "include/list.h"
+#include "include/sds.h"
 
 int param_add(list_t *head, const char *token) {
     if (!*token)

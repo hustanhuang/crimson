@@ -1,9 +1,9 @@
-#include "../include/kq.h"
+#include "include/kq.h"
 
 #include <sys/event.h>
 
-#include "../include/utils.h"
-#include "../include/sock.h"
+#include "include/utils.h"
+#include "include/sock.h"
 
 int retrieve_kqfd() {
     int epollfd = kqueue();
