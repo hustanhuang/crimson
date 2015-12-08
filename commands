@@ -11,7 +11,7 @@ exists
 get
 getbit
 getrange
-havls
+halvs
 hexists
 hgetall
 hincrby
