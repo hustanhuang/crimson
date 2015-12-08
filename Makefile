@@ -31,4 +31,5 @@ table:
 	$(CC) $(CFLAGS) -o obj/table.o -c src/table.c
 
 clean:
+	touch srv tmp~ obj/tmp~ src/tmp~
 	rm srv *~ obj/* src/*~

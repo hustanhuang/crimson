@@ -8,10 +8,13 @@
 #include "list.h"
 #include "sds.h"
 
-void param_add(list_t *head, const char *token) {
+int param_add(list_t *head, const char *token) {
+    if (!*token)
+        return 0;
     Param *new_para = malloc(sizeof(Param));
     new_para->value = sdsnew(token);
     list_insert(&new_para->params, head);
+    return sdslen(new_para->value);
 }
 
 void param_free(list_t *head) {
@@ -33,14 +36,30 @@ int parse(int fd, char buff[], int n) {
 
     C_LIST_HEAD(params);
 
-    /* the parser need to be improved to deal with ' and " */
-    const char *spaces = "\x09\x0a\x0b\x0c\x0d\x20";
-    char *token;
-    while( (token = strsep(&buff, spaces)) != NULL)
-        if (*token)
-            param_add(&params, token);
+    int single_quote = 0,
+        double_quote = 0;
+    for (i = 0; i != n; ++i) {
+        if (isspace(buff[i]) && !single_quote && !double_quote) {
+            buff[i] = '\0';
+        } else if (buff[i] == '\'' && !double_quote) {
+            buff[i] = '\0';
+            single_quote = !single_quote;
+        } else if (buff[i] == '\"' && !single_quote) {
+            buff[i] = '\0';
+            double_quote = !double_quote;
+        }
+    }
 
-    /* procession commands here */
+    if (single_quote || double_quote) {
+        /* quote mark matching failed */
+        return 0;
+    }
+
+    c_prt(buff, n);
+
+    for (int i = 0; i < n; ++i)
+        i += param_add(&params, buff + i);
+
     list_t *pos;
     list_for_each(pos, &params) {
         c_prt(param_value(pos), strlen(param_value(pos)));

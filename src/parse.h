@@ -12,7 +12,7 @@ typedef struct {
 #define param_entry(pos) list_entry(pos, Param, params)
 #define param_value(pos) (param_entry(pos)->value)
 
-extern void param_add(list_t *head, const char *token);
+extern int param_add(list_t *head, const char *token);
 
 extern void param_free(list_t *head);
 
