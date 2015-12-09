@@ -25,7 +25,7 @@ extern int      set_length  (T set);
 
 extern void     set_put     (T set, void *member);
 extern int      set_member  (T set, void *member);
-extern struct member    *set_remove (T set, void *member);
+extern void     *set_remove (T set, void *member);
 
 extern void     set_map   (T set, void apply(void *member));
 

@@ -27,7 +27,8 @@ T set_new (int hint, int cmp(const void *x, const void *y), unsigned int hash(co
 }
 
 void set_free (T *set) {
-    assert(set && *set);
+    if (set == NULL || set == NULL)
+        return;
     if ((*set)->length > 0) {
         struct member *p, *q;
         for (int i = 0; i < (*set)->size; ++i)
@@ -41,30 +42,23 @@ void set_free (T *set) {
 
 T set_copy (T t, int hint) {
     T set;
-    assert(t);
+    if (t == NULL)
+        return NULL;
     set = set_new(hint, t->cmp, t->hash);
     for (int i = 0; i != t->size; ++i)
-        for (struct member *q = t->buckets[i]; q; q = q->link) {
-            void *member = q->member;
-            int index = (*set->hash)(member) % set->size;
-            struct member *p = malloc(sizeof(*p));
-            p->member = member;
-            p->link = set->buckets[index];
-            set->buckets[index] = p;
-            ++(set->length);
-        }
+        for (struct member *q = t->buckets[i]; q; q = q->link)
+            set_put(set, q->member);
     return set;
 }
 
 int set_length (T set) {
-    assert(set);
-    return set->length;
+    return set ? set->length : 0;
 }
 
 void set_put (T set, void *member) {
     struct member *p;
-    assert(set);
-    assert(member);
+    if (set == NULL || member == NULL)
+        return;
     int i = (*set->hash)(member) % set->size;
     for (p = set->buckets[i]; p; p = p->link)
         if ((*set->cmp)(member, p->member) == 0)
@@ -82,8 +76,10 @@ void set_put (T set, void *member) {
 
 int set_member (T set, void *member) {
     struct member *p;
-    assert(set);
-    assert(member);
+    if (member == NULL)
+        return 1;
+    if (set == NULL)
+        return 0;
     int i = (*set->hash)(member) % set->size;
     for (p = set->buckets[i]; p; p = p->link)
         if ((*set->cmp)(member, p->member) == 0)
@@ -91,9 +87,9 @@ int set_member (T set, void *member) {
     return p != NULL;
 }
 
-struct member *set_remove (T set, void *member) {
-    assert(set);
-    assert(member);
+void *set_remove (T set, void *member) {
+    if (set == NULL || member == NULL)
+        return NULL;
     ++(set->timestamp);
     int i = (*set->hash)(member) % set->size;
     for (struct member **pp = &set->buckets[i]; *pp; pp = &(*pp)->link)
@@ -109,8 +105,8 @@ struct member *set_remove (T set, void *member) {
 }
 
 void set_map (T set, void apply(void *member)) {
-    assert(set);
-    assert(apply);
+    if (set == NULL || apply == NULL)
+        return;
     unsigned int stamp = set->timestamp;
     for (int i = 0; i != set->size; ++i)
         for (struct member *p = set->buckets[i]; p; p = p->link) {
@@ -119,10 +115,72 @@ void set_map (T set, void apply(void *member)) {
         }
 }
 
-T set_union (T s, T t);
+T set_union (T s, T t) {
+    if (s == NULL) {
+        return set_copy(t, t->size);
+    } else if (t == NULL)
+        return set_copy(s, s->size);
+    else {
+        T set = set_copy(s, (s->size > t->size ? s->size : t->size));
+        assert(s->cmp == t->cmp && s->hash == t->hash);
+        for (int i = 0; i != t->size; ++i)
+            for (struct member *q = t->buckets[i]; q; q = q->link)
+                set_put(set, q->member);
+        return set;
+    }
+}
 
-T set_inter (T s, T t);
+T set_inter (T s, T t) {
+    if (s && t) {
+        if (s->length < t->length) {
+            T temp = s;
+            t = s;
+            t = temp;
+        }
+        T set = set_new((s->size < t->size ? s->size : t->size), s->cmp, s->hash);
+        assert(s->cmp == t->cmp && s->hash == t->hash);
+        for (int i = 0; i < t->size; ++i)
+            for (struct member *q = t->buckets[i]; q; q = q->link)
+                if (set_member(s, q->member))
+                    set_put(set, q->member);
+        return set;
+    }
+    return NULL;
+}
 
-T set_minus (T s, T t);
+T set_minus (T s, T t) {
+    if (s == NULL)
+        return NULL;
+    else if (t == NULL)
+        return set_copy(s, s->size);
+    else {
+        T set = set_new(s->size, s->cmp, s->hash);
+        assert(s->cmp == t->cmp && s->hash == t->hash);
+        for (int i = 0; i < s->size; ++i)
+            for (struct member *q = s->buckets[i]; q; q = q->link)
+                if (!set_member(t, q->member))
+                    set_put(set, q->member);
+        return set;
+    }
+}
 
-T set_diff (T s, T t);
+T set_diff (T s, T t) {
+    if (s == NULL)
+        return set_copy(t, t->size);
+    else if (t == NULL)
+        return set_copy(s, s->size);
+    else {
+        T set = set_new(s->size, s->cmp, s->hash);
+        assert(s->cmp == t->cmp && s->hash == t->hash);
+        for (int i = 0; i < s->size; ++i)
+            for (struct member *q = s->buckets[i]; q; q = q->link)
+                if (!set_member(t, q->member))
+                    set_put(set, q->member);
+        for (int i = 0; i < t->size; ++i)
+            for (struct member *q = t->buckets[i]; q; q = q->link)
+                if (!set_member(s, q->member))
+                    set_put(set, q->member);
+        return set;
+    }
+}
+
