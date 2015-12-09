@@ -19,6 +19,7 @@ typedef struct T *T;
 
 extern T        set_new     (int hint, int cmp(const void *x, const void *y), unsigned int hash(const void *member));
 extern void     set_free    (T *set);
+extern T        set_copy    (T t, int hint);
 
 extern int      set_length  (T set);
 

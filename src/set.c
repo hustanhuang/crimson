@@ -39,6 +39,23 @@ void set_free (T *set) {
     free(*set);
 }
 
+T set_copy (T t, int hint) {
+    T set;
+    assert(t);
+    set = set_new(hint, t->cmp, t->hash);
+    for (int i = 0; i != t->size; ++i)
+        for (struct member *q = t->buckets[i]; q; q = q->link) {
+            void *member = q->member;
+            int index = (*set->hash)(member) % set->size;
+            struct member *p = malloc(sizeof(*p));
+            p->member = member;
+            p->link = set->buckets[index];
+            set->buckets[index] = p;
+            ++(set->length);
+        }
+    return set;
+}
+
 int set_length (T set) {
     assert(set);
     return set->length;
