@@ -7,9 +7,9 @@
 typedef struct {
     sds value;
     list_t params;
-} Param;
+} param_t;
 
-#define param_entry(pos) list_entry(pos, Param, params)
+#define param_entry(pos) list_entry(pos, param_t, params)
 #define param_value(pos) (param_entry(pos)->value)
 
 extern int param_add(list_t *head, const char *token);

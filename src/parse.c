@@ -11,7 +11,7 @@
 int param_add(list_t *head, const char *token) {
     if (!*token)
         return 0;
-    Param *new_para = malloc(sizeof(Param));
+    param_t *new_para = malloc(sizeof(param_t));
     new_para->value = sdsnew(token);
     list_insert(&new_para->params, head);
     return sdslen(new_para->value);
