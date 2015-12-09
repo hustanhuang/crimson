@@ -6,6 +6,7 @@
 #include "include/utils.h"
 #include "include/kq.h"
 #include "include/sock.h"
+#include "include/mem.h"
 
 void sig_handler(int sig) {
     switch (sig) {
@@ -29,8 +30,14 @@ int main(int argc, char *argv[]) {
 
     update_event(kqfd, listenfd, KREADEVENT, 0);
 
+    mem_init();
+    c_log("memory initialized");
+
     while (!request_quit)
         loop_once(kqfd, listenfd, 500);
+
+    mem_free();
+    c_log("memory released");
 
     c_log("quit");
     exit(EXIT_SUCCESS);
