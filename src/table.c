@@ -79,7 +79,7 @@ void *table_get (T table, const void *key) {
     return p ? p->value : NULL;
 }
 
-struct bucket *table_remove (T table, void *key) {
+void *table_remove (T table, void *key) {
     assert(table);
     assert(key);
     ++(table->timestamp);
@@ -87,9 +87,11 @@ struct bucket *table_remove (T table, void *key) {
     for (struct bucket **pp = &table->buckets[i]; *pp; pp = &(*pp)->link)
         if ((*table->cmp)(key, (*pp)->key) == 0) {
             struct bucket *p = *pp;
+            void *value = p->value;
             *pp = p->link;
+            free(p);
             --(table->length);
-            return p;
+            return value;
         }
     return NULL;
 }

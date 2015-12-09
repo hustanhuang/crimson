@@ -25,7 +25,7 @@ extern int      table_length(T table);
 
 extern void    *table_put   (T table, void *key, void *value);
 extern void    *table_get   (T table, const void *key);
-extern struct bucket  *table_remove(T table, void *key);
+extern void    *table_remove(T table, void *key);
 
 extern void     table_map   (T table, void apply(void *key, void **value));
 
