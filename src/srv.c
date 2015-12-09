@@ -36,6 +36,5 @@ int main(int argc, char *argv[]) {
     c_log("memory initialized");
 
     while (1)
-        loop_once(kqfd, listenfd, 500);
-
+        loop_once(kqfd, listenfd, 1000);
 }
