@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <signal.h>
 
 #include "include/utils.h"
 #include "include/list.h"
@@ -62,11 +63,16 @@ int parse(int fd, char buff[], int n) {
     list_t *pos;
     list_for_each(pos, &params) {
         c_prt(param_value(pos), strlen(param_value(pos)));
+        if (strcmp(param_value(pos), "shutdown") == 0)
+            request_quit = 1;
         param_value(pos) = sdscat(param_value(pos), "\r\n");
         exit_if(write(fd, param_value(pos), strlen(param_value(pos)) + 1) <= 0);
     }
 
     param_free(&params);
+
+    if (request_quit)
+        raise(SIGINT);
 
     return 0;
 }
