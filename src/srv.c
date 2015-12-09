@@ -11,9 +11,11 @@
 void sig_handler(int sig) {
     switch (sig) {
         case SIGINT:
-            request_quit = 1;
             c_log("SIGINT received");
-            break;
+            mem_free();
+            c_log("memory released");
+            c_log("quit");
+            exit(EXIT_SUCCESS);
         default:
             exit(EXIT_FAILURE);
     }
@@ -23,22 +25,17 @@ int main(int argc, char *argv[]) {
     signal(SIGINT, sig_handler);
 
     int listenfd = retrieve_listenfd();
-    c_log("listenfd retrieved");
+    c_log("listenfd ready");
 
     int kqfd = retrieve_kqfd();
-    c_log("kqfd retrieved");
+    c_log("kqfd ready");
 
     update_event(kqfd, listenfd, KREADEVENT, 0);
 
     mem_init();
     c_log("memory initialized");
 
-    while (!request_quit)
+    while (1)
         loop_once(kqfd, listenfd, 500);
 
-    mem_free();
-    c_log("memory released");
-
-    c_log("quit");
-    exit(EXIT_SUCCESS);
 }

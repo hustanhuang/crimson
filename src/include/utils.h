@@ -18,8 +18,6 @@
             msg); \
 } while (0)
 
-static int request_quit = 0;
-
 static void set_non_block(int fd) {
     int flags = fcntl(fd, F_GETFL, 0);
     exit_if(flags < 0);

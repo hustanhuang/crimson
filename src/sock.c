@@ -38,6 +38,7 @@ int retrieve_listenfd() {
 }
 
 void handle_accept(int kqfd, int listen_fd) {
+    c_log("accept event");
     SA_in cli_addr;
     socklen_t cli_size = sizeof(cli_addr);
 
@@ -52,17 +53,18 @@ void handle_accept(int kqfd, int listen_fd) {
 }
 
 void handle_read(int kqfd, int client_fd) {
+    c_log("read event");
     char buff[MAX_BUFF_LEN];
     int n = 0;
 
     while ( (n = read(client_fd, buff, sizeof(buff))) > 0) {
         c_log("receive message");
         exit_if(parse(client_fd, buff, n));
+        c_log("message processed");
     }
 
-    if (n < 0 && (errno == EAGAIN || errno == EWOULDBLOCK))
+    if (n < 0 && errno == EAGAIN)
         return;
-
     exit_if(n < 0);
     c_log("connection terminated");
     close(client_fd);

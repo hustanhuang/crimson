@@ -1,17 +1,21 @@
 #include "include/kq.h"
 
 #include <sys/event.h>
+#include <signal.h>
+#include <errno.h>
 
 #include "include/utils.h"
 #include "include/sock.h"
 
 int retrieve_kqfd() {
-    int epollfd = kqueue();
-    exit_if(epollfd < 0);
-    return epollfd;
+    int kqfd = kqueue();
+    exit_if(kqfd < 0);
+    c_log("kqfd retrieved");
+    return kqfd;
 }
 
 void update_event(int kqfd, int fd, int events, int modify) {
+    c_log("update event");
     struct kevent ev[2];
     int n = 0;
     if (events & KREADEVENT) {
@@ -28,8 +32,7 @@ void update_event(int kqfd, int fd, int events, int modify) {
 }
 
 void loop_once(int kqfd, int listen_fd, int interval) {
-    if (request_quit)
-        return;
+    c_log("heart beat");
 
     /* process timed events here */
 
@@ -53,6 +56,8 @@ void loop_once(int kqfd, int listen_fd, int interval) {
             }
         } else if (events == EVFILT_WRITE) {
             handle_write(kqfd, client_fd);
+        } else if (errno == EINTR) {
+            return;
         } else {
             exit_if(1);
         }
