@@ -7,6 +7,7 @@
 #include "include/kq.h"
 #include "include/sock.h"
 #include "include/mem.h"
+#include "include/timed.h"
 
 void sig_handler(int sig) {
     switch (sig) {
@@ -14,6 +15,8 @@ void sig_handler(int sig) {
             c_log("SIGINT received");
             mem_free();
             c_log("memory released");
+            event_free();
+            c_log("events released");
             c_log("quit");
             exit(EXIT_SUCCESS);
         default:
@@ -34,6 +37,9 @@ int main(int argc, char *argv[]) {
 
     mem_init();
     c_log("memory initialized");
+
+    event_init();
+    c_log("timed events list initialized");
 
     while (1)
         loop_once(kqfd, listenfd, 1000);
