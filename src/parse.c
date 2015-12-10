@@ -8,6 +8,7 @@
 #include "include/utils.h"
 #include "include/list.h"
 #include "include/sds.h"
+#include "include/cmd.h"
 
 int param_add(list_t *head, const char *token) {
     if (!*token)
@@ -60,19 +61,7 @@ int parse(int fd, char buff[], int n) {
         i += param_add(&params, buff + i);
 
     /* processing command */
-    list_t *pos;
-    list_for_each(pos, &params) {
-        c_prt(param_value(pos), strlen(param_value(pos)));
-        if (strcmp(param_value(pos), "shutdown") == 0)
-            request_quit = 1;
-        param_value(pos) = sdscat(param_value(pos), "\r\n");
-        exit_if(write(fd, param_value(pos), strlen(param_value(pos)) + 1) <= 0);
-    }
-
-    param_free(&params);
-
-    if (request_quit)
-        raise(SIGINT);
+    exec_func(fd, &params);
 
     return 0;
 }
