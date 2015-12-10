@@ -9,14 +9,21 @@
 #include "include/mem.h"
 #include "include/timed.h"
 
+int mem_inited = 0,
+    event_inited = 0;
+
 void sig_handler(int sig) {
     switch (sig) {
         case SIGINT:
             c_log("SIGINT received");
-            mem_free();
-            c_log("memory released");
-            event_free();
-            c_log("events released");
+            if (mem_inited) {
+                mem_free();
+                c_log("memory released");
+            }
+            if (event_inited) {
+                event_free();
+                c_log("events released");
+            }
             c_log("quit");
             exit(EXIT_SUCCESS);
         default:
@@ -35,10 +42,10 @@ int main(int argc, char *argv[]) {
 
     update_event(kqfd, listenfd, KREADEVENT, 0);
 
-    mem_init();
+    mem_inited = (mem_init() == 0);
     c_log("memory initialized");
 
-    event_init();
+    event_inited = (event_init() == 0);
     c_log("timed events list initialized");
 
     while (1)

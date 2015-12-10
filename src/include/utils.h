@@ -7,8 +7,9 @@
 #include <time.h>
 #include <fcntl.h>
 #include <ctype.h>
+#include <signal.h>
 
-#define exit_if(condition) do { if (condition) { perror(__FUNCTION__); exit(EXIT_FAILURE); } } while (0)
+#define exit_if(condition) do { if (condition) { perror(__func__); raise(SIGINT); } } while (0)
 #define c_log(msg) do { \
     struct timeval tick; \
     gettimeofday(&tick, NULL); \
