@@ -7,7 +7,7 @@
 
 T c_string_new() {
     T new_p = malloc(sizeof(*new_p));
-    new_p->content = sdsnnew(NULL, 0);
+    new_p->content = sdsnew(NULL);
     return new_p;
 }
 
