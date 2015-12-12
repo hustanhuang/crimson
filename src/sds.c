@@ -15,6 +15,10 @@ sds sdsnnew(const void *init, size_t len) {
     return s;
 }
 
+void sdsfree(sds s) {
+    free(SDS_HDR(s));
+}
+
 sds sdscat(sds s, const char *t) {
     size_t tlen = strlen(t);
     size_t len = sdslen(s) + tlen;

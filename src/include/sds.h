@@ -16,7 +16,7 @@ struct sdshdr {
 sds sdsnnew(const void *init, size_t len);
 #define sdsnew(init) sdsnnew(init, init ? strlen(init) : 0)
 
-#define sdsfree(s) free(SDS_HDR(s))
+void sdsfree(sds s);
 
 #define sdslen(s) (SDS_HDR(s)->len)
 
