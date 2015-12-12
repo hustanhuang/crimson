@@ -87,3 +87,14 @@ int func_del(int fd, list_t *params) {
 
     return 0;
 }
+
+int func_exists(int fd, list_t *params) {
+    if (check_paranum(fd, params, 1))
+        return 0;
+    obj_t *obj_ptr = db_get(param_value(params->next->next));
+
+    const char *msg = obj_ptr ? "1\r\n" : "0\r\n";
+    size_t msglen = strlen(msg);
+    exit_if(write(fd, msg, msglen) <= 0);
+    return 0;
+}

@@ -28,6 +28,7 @@ static cmd_t cmds[] = {
     {"set",         func_set},
     {"get",         func_get},
     {"del",         func_del},
+    {"exists",         func_exists},
     {"shutdown",    func_shut},
     {NULL,          func_nil}
 };
