@@ -26,12 +26,15 @@ int func_nil(int fd, list_t *params) {
 
 static cmd_t cmds[] = {
     {"set",         func_set},
+    {"get",         func_get},
     {"shutdown",    func_shut},
     {NULL,          func_nil}
 };
 
 int exec_func(int fd, list_t *params) {
     const char *func_name = param_value(params->next);
+    if (params->next == params)
+        return 0;
     cmd_t *cmd_iter = cmds;
     while (cmd_iter->name) {
         if (strcmp(func_name, cmd_iter->name) == 0)
