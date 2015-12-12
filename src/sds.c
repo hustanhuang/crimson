@@ -55,7 +55,7 @@ sds sdscpy(sds s, const char *t) {
     bzero(sh, newsize);
 
     sh->len = len;
-    strncpy(sh->buf, s, sdslen(s));
+    strncpy(sh->buf, t, sdslen(t));
 
     sdsfree(s);
     return sh->buf;

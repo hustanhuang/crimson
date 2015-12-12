@@ -1,5 +1,6 @@
 #include "include/c_string.h"
 
+#include "include/utils.h"
 #include "include/parse.h"
 
 #define T c_string_t
@@ -16,7 +17,11 @@ void c_string_free(T p) {
 }
 
 void c_string_set(T p, const char *s) {
-    sdsfree(sdscpy(p->content, s));
+    p->content = sdscpy(p->content, s);
+}
+
+sds c_string_get(T p) {
+    return p->content;
 }
 
 #undef T

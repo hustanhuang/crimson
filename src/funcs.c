@@ -34,6 +34,8 @@ int func_set(int fd, list_t *params) {
         return 0;
     obj_t *obj_ptr = obj_create(param_value(params->next->next), STRING_T);
     c_string_set(obj_ptr->obj, param_value(params->prev));
+    c_string_get(obj_ptr->obj);
+
     obj_free(db_put(obj_ptr));
 
     const char *msg = "OK\r\n";
@@ -46,7 +48,29 @@ int func_set(int fd, list_t *params) {
 int func_get(int fd, list_t *params) {
     if (check_paranum(fd, params, 1))
         return 0;
-    obj_t *obj_ptr = obj_create(param_value(params->next->next), STRING_T);
-    obj_free(db_put(obj_ptr));
+    obj_t *obj_ptr = db_get(param_value(params->next->next));
+    if (obj_ptr == NULL) {
+        const char *msg = "(nil)\r\n";
+        size_t msglen = strlen(msg);
+        exit_if(write(fd, msg, msglen) <= 0);
+        return 0;
+    }
+
+    char buff[MAX_BUFF_LEN];
+    bzero(buff, sizeof(buff));
+    switch (obj_ptr->type) {
+        case STRING_T:
+            sprintf(buff, "%s\r\n", c_string_get(obj_ptr->obj));
+            exit_if(write(fd, buff, strlen(buff)) <= 0);
+            break;
+        case LIST_T:
+            break;
+        case HASH_T:
+            break;
+        case SET_T:
+            break;
+        default:
+            break;
+    }
     return 0;
 }

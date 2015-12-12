@@ -12,6 +12,9 @@
 table_t all_objs;
 
 int key_cmp(const void *x, const void *y) {
+    c_log("compare");
+    c_prt(x, strlen(x));
+    c_prt(y, strlen(y));
     return strcmp((const char*)x, (const char*)y);
 }
 
@@ -36,12 +39,13 @@ void db_destroy() {
 }
 
 void *db_put(obj_t *new_obj) {
-    c_log(new_obj->name);
     printf("put obj : %p\n", new_obj);
     return table_put(all_objs, new_obj->name, new_obj);
 }
 
-void *db_get(const char *key) {
+obj_t *db_get(const char *key) {
     assert(key);
-    return table_get(all_objs, key);
+    obj_t *p = table_get(all_objs, key);
+    printf("get obj : %p\n", p);
+    return p;
 }

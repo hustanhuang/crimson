@@ -11,5 +11,6 @@ extern int db_init();
 extern void db_destroy();
 
 extern void *db_put(obj_t *new_obj);
+extern obj_t *db_get(const char *key);
 
 #endif
