@@ -38,14 +38,15 @@ obj_t *obj_create(char *name, obj_e type) {
 }
 
 void obj_free(obj_t *obj) {
-    assert(obj);
+    if (obj == NULL)
+        return;
     printf("free obj : %p\n", obj);
     assert(obj->name);
     free(obj->name);
     assert(obj->obj);
     switch (obj->type) {
         case STRING_T:
-            c_string_free(&obj->obj);
+            c_string_free(obj->obj);
             break;
         case LIST_T:
             break;
@@ -54,7 +55,6 @@ void obj_free(obj_t *obj) {
         case SET_T:
             break;
         default:
-            free(obj);
             break;
     }
     free(obj);

@@ -40,3 +40,8 @@ void *db_put(obj_t *new_obj) {
     printf("put obj : %p\n", new_obj);
     return table_put(all_objs, new_obj->name, new_obj);
 }
+
+void *db_get(const char *key) {
+    assert(key);
+    return table_get(all_objs, key);
+}

@@ -13,4 +13,8 @@ typedef struct T *T;
 extern T c_string_new();
 extern void c_string_free();
 
+extern void c_string_set(T p, const char *s);
+
+#undef T
+
 #endif
