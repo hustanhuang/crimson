@@ -32,7 +32,7 @@ void update_event(int kqfd, int fd, int events, int modify) {
 }
 
 void loop_once(int kqfd, int listen_fd, int interval) {
-    c_log("heart beat");
+    /*c_log("heart beat");*/
 
     /* process timed events here */
 

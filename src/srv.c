@@ -6,9 +6,11 @@
 #include "include/utils.h"
 #include "include/kq.h"
 #include "include/sock.h"
+#include "include/db.h"
 #include "include/timed.h"
 
 int event_inited = 0;
+int db_inited = 0;
 
 void sig_handler(int sig) {
     switch (sig) {
@@ -17,6 +19,10 @@ void sig_handler(int sig) {
             if (event_inited) {
                 event_free();
                 c_log("events released");
+            }
+            if (db_inited) {
+                db_destroy();
+                c_log("db destroyed");
             }
             c_log("quit");
             exit(EXIT_SUCCESS);
@@ -35,6 +41,9 @@ int main(int argc, char *argv[]) {
     c_log("kqfd ready");
 
     update_event(kqfd, listenfd, KREADEVENT, 0);
+
+    db_inited = (db_init() == 0);
+    c_log("db initialized");
 
     event_inited = (event_init() == 0);
     c_log("timed events list initialized");

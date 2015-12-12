@@ -13,9 +13,10 @@
 #define c_log(msg) do { \
     struct timeval tick; \
     gettimeofday(&tick, NULL); \
-    printf("%.19s.%03ld * %s\n", \
+    printf("%.19s.%03ld @ %s: * %s\n", \
             ctime(&tick.tv_sec), \
             tick.tv_usec / 1000, \
+            __func__, \
             msg); \
 } while (0)
 

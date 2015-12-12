@@ -2,6 +2,9 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
+
+#include "include/utils.h"
 
 #include "include/c_string.h"
 #include "include/c_list.h"
@@ -9,12 +12,13 @@
 #include "include/c_set.h"
 
 obj_t *obj_create(char *name, obj_e type) {
-    obj_t *obj = malloc(sizeof(obj));
+    obj_t *obj = malloc(sizeof(*obj));
     obj->name = calloc(sizeof(char), strlen(name) + 1);
+    strcpy(obj->name, name);
     obj->type = type;
     switch (type) {
         case STRING_T:
-            obj->obj = NULL;
+            obj->obj = c_string_new();
             break;
         case LIST_T:
             obj->obj = NULL;
@@ -29,13 +33,19 @@ obj_t *obj_create(char *name, obj_e type) {
             obj->obj = NULL;
             break;
     }
+    printf("new obj : %p\n", obj);
     return obj;
 }
 
 void obj_free(obj_t *obj) {
+    assert(obj);
+    printf("free obj : %p\n", obj);
+    assert(obj->name);
     free(obj->name);
+    assert(obj->obj);
     switch (obj->type) {
         case STRING_T:
+            c_string_free(&obj->obj);
             break;
         case LIST_T:
             break;
@@ -47,5 +57,6 @@ void obj_free(obj_t *obj) {
             free(obj);
             break;
     }
+    free(obj);
     return;
 }

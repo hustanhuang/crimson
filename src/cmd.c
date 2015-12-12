@@ -7,6 +7,8 @@
 #include "include/utils.h"
 #include "include/parse.h"
 
+#include "include/funcs.h"
+
 int func_shut(int fd, list_t *params) {
     request_quit = 1;
     const char *const msg = "shutdown\r\n";
@@ -23,6 +25,7 @@ int func_nil(int fd, list_t *params) {
 }
 
 static cmd_t cmds[] = {
+    {"test",        func_test},
     {"shutdown",    func_shut},
     {NULL,          func_nil}
 };
