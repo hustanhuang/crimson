@@ -89,11 +89,16 @@ int func_del(int fd, list_t *params) {
 }
 
 int func_exists(int fd, list_t *params) {
-    if (check_paranum(fd, params, 1))
-        return 0;
-    obj_t *obj_ptr = db_get(param_value(params->next->next));
+    int exists_num = 0;
 
-    const char *msg = obj_ptr ? "1\r\n" : "0\r\n";
+    for (list_t *pos = params->next->next; pos != params; pos = pos->next) {
+        c_log(param_value(pos));
+        if (db_get(param_value(pos)))
+            ++exists_num;
+    }
+
+    char msg[MAX_BUFF_LEN];
+    sprintf(msg, "%d\r\n", exists_num);
     size_t msglen = strlen(msg);
     exit_if(write(fd, msg, msglen) <= 0);
     return 0;
