@@ -33,14 +33,12 @@ obj_t *obj_create(char *name, obj_e type) {
             obj->obj = NULL;
             break;
     }
-    printf("new obj : %p\n", obj);
     return obj;
 }
 
 void obj_free(obj_t *obj) {
     if (obj == NULL)
         return;
-    printf("free obj : %p\n", obj);
     assert(obj->name);
     free(obj->name);
     assert(obj->obj);

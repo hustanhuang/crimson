@@ -61,8 +61,10 @@ void *table_put (T table, void *key, void *value) {
         table->buckets[i] = p;
         ++(table->length);
         prev = NULL;
-    } else
+    } else {
+        p->key = key;
         prev = p->value;
+    }
     p->value = value;
     ++(table->timestamp);
     return prev;
