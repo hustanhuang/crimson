@@ -27,6 +27,7 @@ int func_nil(int fd, list_t *params) {
 static cmd_t cmds[] = {
     {"set",         func_set},
     {"get",         func_get},
+    {"del",         func_del},
     {"shutdown",    func_shut},
     {NULL,          func_nil}
 };

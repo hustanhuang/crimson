@@ -74,3 +74,16 @@ int func_get(int fd, list_t *params) {
     }
     return 0;
 }
+
+int func_del(int fd, list_t *params) {
+    if (check_paranum(fd, params, 1))
+        return 0;
+    obj_t *obj_ptr = db_del(param_value(params->next->next));
+    obj_free(obj_ptr);
+
+    const char *msg = "OK\r\n";
+    size_t msglen = strlen(msg);
+    exit_if(write(fd, msg, msglen) <= 0);
+
+    return 0;
+}

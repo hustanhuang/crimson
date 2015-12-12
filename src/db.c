@@ -44,3 +44,9 @@ obj_t *db_get(const char *key) {
     obj_t *p = table_get(all_objs, key);
     return p;
 }
+
+obj_t *db_del(char *key) {
+    assert(key);
+    obj_t *p = table_remove(all_objs, key);
+    return p;
+}
